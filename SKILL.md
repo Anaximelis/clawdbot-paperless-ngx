@@ -7,6 +7,10 @@ description: Interact with Paperless-ngx document management system via REST API
 
 Manage documents in Paperless-ngx via its REST API using HTTP requests.
 
+**Official API Documentation**: https://docs.paperless-ngx.com/api/
+
+The API also provides a browsable interface at `$PAPERLESS_URL/api/` and OpenAPI schema at `$PAPERLESS_URL/api/schema/view/`.
+
 ## Configuration
 
 Requires environment variables:
@@ -20,6 +24,13 @@ Include token in all requests:
 Authorization: Token $PAPERLESS_TOKEN
 ```
 
+## API Versioning
+
+Specify API version via header (current version: 9):
+```
+Accept: application/json; version=9
+```
+
 ## Core Operations
 
 ### Search Documents
@@ -27,15 +38,45 @@ Authorization: Token $PAPERLESS_TOKEN
 ```bash
 curl -s "$PAPERLESS_URL/api/documents/?query=invoice" \
   -H "Authorization: Token $PAPERLESS_TOKEN"
+
+# Find similar documents
+curl -s "$PAPERLESS_URL/api/documents/?more_like_id=123" \
+  -H "Authorization: Token $PAPERLESS_TOKEN"
 ```
 
 Filter options: `correspondent__id`, `document_type__id`, `tags__id__in`, `created__date__gte`, `created__date__lte`, `added__date__gte`.
+
+### Autocomplete
+
+```bash
+curl -s "$PAPERLESS_URL/api/search/autocomplete/?term=inv&limit=10" \
+  -H "Authorization: Token $PAPERLESS_TOKEN"
+```
 
 ### Get Document Details
 
 ```bash
 curl -s "$PAPERLESS_URL/api/documents/{id}/" \
   -H "Authorization: Token $PAPERLESS_TOKEN"
+```
+
+### Get Document Metadata
+
+```bash
+curl -s "$PAPERLESS_URL/api/documents/{id}/metadata/" \
+  -H "Authorization: Token $PAPERLESS_TOKEN"
+```
+
+### Preview/Thumbnail
+
+```bash
+# Inline preview
+curl -s "$PAPERLESS_URL/api/documents/{id}/preview/" \
+  -H "Authorization: Token $PAPERLESS_TOKEN"
+
+# PNG thumbnail
+curl -s "$PAPERLESS_URL/api/documents/{id}/thumb/" \
+  -H "Authorization: Token $PAPERLESS_TOKEN" -o thumb.png
 ```
 
 ### Download Document
