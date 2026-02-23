@@ -1,6 +1,6 @@
 ---
 name: paperless-ngx
-description: Interact with Paperless-ngx document management system via REST API. Use when users want to search, upload, download, organize documents, manage tags, correspondents, or document types in their Paperless-ngx instance.
+description: Interact with Paperless-ngx document management system via REST API. Use when users want to search, upload, download, organize documents, manage tags, correspondents, document types or share documents in their Paperless-ngx instance.
 ---
 
 # Paperless-ngx Skill
@@ -185,6 +185,45 @@ After upload, check task status:
 curl -s "$PAPERLESS_URL/api/tasks/?task_id={uuid}" \
   -H "Authorization: Token $PAPERLESS_TOKEN"
 ```
+
+## Share Links
+
+```bash
+# Create share link
+curl -X POST "$PAPERLESS_URL/api/share_links/" \
+  -H "Authorization: Token $PAPERLESS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "document": 1476,
+    "expiration": "2026-02-26T23:59:59Z",
+    "file_version": "archive"
+  }'
+
+# List share links
+curl -s "$PAPERLESS_URL/api/share_links/" \
+  -H "Authorization: Token $PAPERLESS_TOKEN"
+
+# Delete share link
+curl -s -X DELETE "$PAPERLESS_URL/api/share_links/{id}/" \
+  -H "Authorization: Token $PAPERLESS_TOKEN"
+```
+
+Fields:
+- `document`: document ID (required)
+- `expiration`: ISO 8601 UTC timestamp, e.g. current time + 7 days (optional, omit for no expiry)
+- `file_version`: `"archive"` (OCR'd PDF) or `"original"` (optional, default: `"archive"`)
+
+**Response:**
+```json
+{
+  "id": 2,
+  "slug": "Q3x5DJ9UiDYc...",
+  "expiration": "2026-02-26T23:59:59Z",
+  "document": 1476
+}
+```
+
+**Share Link:** `$PAPERLESS_URL/share/{slug}`
 
 ## Response Handling
 
