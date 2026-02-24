@@ -1,6 +1,7 @@
 ---
 name: paperless-ngx
 description: Interact with Paperless-ngx document management system via REST API. Use when users want to search, upload, download, organize documents, manage tags, correspondents, document types or share documents in their Paperless-ngx instance.
+Metadata: {"openclaw": { "env": ["PAPERLESS_URL", "PAPERLESS_TOKEN"], "primaryEnv": "PAPERLESS_TOKEN" } }
 ---
 
 # Paperless-ngx Skill
